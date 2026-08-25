@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/x-icon" href="img/menulux_logo_circle.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Actions - Menulux POS</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
+    <style>
+        /* Base Reset & Design Tokens */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f8fafc;
+            font-family: Arial, sans-serif;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Container Card Setup */
+        .actions-card {
+            width: 100%;
+            max-width: 600px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            border: 1px solid #e2e8f0;
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Header Information */
+        .card-header {
+            text-align: center;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 20px;
+        }
+
+        .title-main {
+            font-size: 26px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .status-badge-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .status-badge {
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .status-empty { background-color: #e2e8f0; color: #475569; }
+        .status-full { background-color: #ffe4e6; color: #e11d48; }
+        .status-reserved { background-color: #fef9c3; color: #854d0e; }
+
+        /* Actions Interactive List */
+        .action-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 18px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            border: 1px solid #e2e8f0;
+            background-color: #ffffff;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Variant 1: Customer Entry */
+        .btn-occupied {
+            border-left: 6px solid #e11d48;
+        }
+        .btn-occupied .action-icon {
+            color: #e11d48;
+            background-color: #ffe4e6;
+        }
+        .btn-occupied .action-title {
+            color: #9f1239;
+        }
+
+        /* Variant 2: Mark as Reserved */
+        .btn-reserved {
+            border-left: 6px solid #d97706;
+        }
+        .btn-reserved .action-icon {
+            color: #d97706;
+            background-color: #fef3c7;
+        }
+        .btn-reserved .action-title {
+            color: #92400e;
+        }
+
+        /* Variant 3: Clear Table */
+        .btn-clear {
+            border-left: 6px solid #16a34a;
+        }
+        .btn-clear .action-icon {
+            color: #16a34a;
+            background-color: #dcfce7;
+        }
+        .btn-clear .action-title {
+            color: #166534;
+        }
+
+        .action-icon {
+            font-size: 28px;
+            width: 52px;
+            height: 52px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .action-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        /* Footer Cancel Action */
+        .card-footer {
+            text-align: center;
+            padding-top: 12px;
+        }
+
+        .cancel-btn {
+            display: inline-block;
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 700;
+            font-size: 15px;
+            padding: 10px 24px;
+            border-radius: 8px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .cancel-btn:hover {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="actions-card">
+        <!-- Header -->
+        <header class="card-header">
+            <h1 class="title-main">Table Actions</h1>
+            <div class="status-badge-container">
+                Current Status: <span class="status-badge status-empty" id="statusBadge">...</span>
+            </div>
+        </header>
+
+        <!-- Actions Container -->
+        <div class="action-list">
+            <!-- Customer Entry -->
+            <a href="#" class="action-btn btn-occupied" onclick="customerEntry(); return false;">
+                <span class="material-symbols-outlined action-icon">flag_2</span>
+                <span class="action-title">Customer Entry</span>
+            </a>
+
+            <!-- Mark as Reserved -->
+            <a href="#" class="action-btn btn-reserved" onclick="reserveEntry(); return false;">
+                <span class="material-symbols-outlined action-icon">edit_calendar</span>
+                <span class="action-title">Mark as Reserved</span>
+            </a>
+
+            <!-- Clear Table -->
+            <a href="#" class="action-btn btn-clear" onclick="setState('empty'); return false;">
+                <span class="material-symbols-outlined action-icon">delete</span>
+                <span class="action-title">Clear Table / Cancel</span>
+            </a>
+        </div>
+
+        <!-- Footer Cancel Button -->
+        <footer class="card-footer">
+            <a href="GARSON.html" class="cancel-btn">Back to Main Screen</a>
+        </footer>
+    </main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const masaId = localStorage.getItem("pendingMasa");
+    const pendingState = localStorage.getItem("pendingState");
+
+    if (!masaId || !pendingState) {
+        window.location.href = "GARSON.html";
+        return;
+    }
+
+    document.querySelector(".title-main").textContent = "Table " + masaId + " Actions";
+
+    const currentState = localStorage.getItem("masa_" + masaId) || "empty";
+    const statusBadge = document.getElementById("statusBadge");
+
+    if (currentState === "full") {
+        statusBadge.textContent = "OCCUPIED";
+        statusBadge.className = "status-badge status-full";
+    } else if (currentState === "reserved") {
+        statusBadge.textContent = "RESERVED";
+        statusBadge.className = "status-badge status-reserved";
+    } else {
+        statusBadge.textContent = "EMPTY";
+        statusBadge.className = "status-badge status-empty";
+    }
+
+    function clearPending() {
+        localStorage.removeItem("pendingMasa");
+        localStorage.removeItem("pendingState");
+    }
+
+    function askPeopleCount() {
+        let input = prompt("How many people are seating? (e.g., 2)", "2");
+        if (input === null) return null;
+        input = input.trim();
+        if (!input) return null;
+
+        const num = parseInt(input, 10);
+        if (!Number.isFinite(num) || num <= 0 || num > 50) {
+            alert("Please enter a valid number (1 - 50).");
+            return askPeopleCount();
+        }
+        return num;
+    }
+
+    function askName() {
+        let name = prompt("Reservation Name (Full Name):", "");
+        if (name === null) return null;
+        name = name.trim();
+        if (!name) {
+            alert("Full Name cannot be empty.");
+            return askName();
+        }
+        return name;
+    }
+
+    function askPhone() {
+        let phone = prompt("Phone number:", "");
+        if (phone === null) return null;
+        phone = phone.trim();
+        if (!phone) {
+            alert("Phone number cannot be empty.");
+            return askPhone();
+        }
+        return phone;
+    }
+
+    // Generic state setter
+    window.setState = function(state) {
+        localStorage.setItem("masa_" + masaId, state);
+
+        if (state === "empty") {
+            localStorage.removeItem("masa_people_" + masaId);
+            localStorage.removeItem("masa_res_name_" + masaId);
+            localStorage.removeItem("masa_res_phone_" + masaId);
+            localStorage.removeItem("menulux_order_table_" + masaId + "_v1");
+        }
+
+        clearPending();
+        window.location.href = "GARSON.html";
+    };
+
+    // Customer entry logic
+    window.customerEntry = function() {
+        localStorage.setItem("masa_" + masaId, "full");
+
+        const goOrder = confirm(
+            "Would you like to take an order?\n\n" +
+            "OK: Go to order page\n" +
+            "Cancel: Mark as OCCUPIED only"
+        );
+
+        const people = askPeopleCount();
+        if (people !== null) localStorage.setItem("masa_people_" + masaId, String(people));
+
+        localStorage.removeItem("masa_res_name_" + masaId);
+        localStorage.removeItem("masa_res_phone_" + masaId);
+
+        clearPending();
+
+        if (goOrder) {
+            window.location.href = "order.html?masa=" + encodeURIComponent(masaId);
+        } else {
+            window.location.href = "GARSON.html";
+        }
+    };
+
+    // Reserve flow
+    window.reserveEntry = function() {
+        const name = askName();
+        if (name === null) return;
+
+        const phone = askPhone();
+        if (phone === null) return;
+
+        const people = askPeopleCount();
+        if (people === null) return;
+
+        localStorage.setItem("masa_" + masaId, "reserved");
+        localStorage.setItem("masa_res_name_" + masaId, name);
+        localStorage.setItem("masa_res_phone_" + masaId);
+        localStorage.setItem("masa_people_" + masaId, String(people));
+
+        localStorage.removeItem("menulux_order_table_" + masaId + "_v1");
+
+        clearPending();
+        window.location.href = "GARSON.html";
+    };
+});
+</script>
+
+</body>
+</html>

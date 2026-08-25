@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/x-icon" href="img/menulux_logo_circle.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registered Tables - Menulux POS</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <style>
+        /* Base Reset & Setup */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: rgb(28, 47, 73);
+            font-family: Arial, sans-serif;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* Top Header Navigation Bar */
+        .header-bar {
+            background-color: rgb(28, 47, 73);
+            width: 100%;
+            max-width: 1200px;
+            height: 70px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            color: #E1B12C;
+            background-color: rgb(28, 47, 73);
+            border: #E1B12C solid 2px;
+            cursor: pointer;
+            border-radius: 50%;
+            height: 40px;
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .back-btn:hover {
+            background-color: #E1B12C;
+            color: rgb(28, 47, 73);
+        }
+
+        .header-title {
+            color: #ffffff;
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .btn-add-table {
+            background-color: #E1B12C;
+            color: rgb(28, 47, 73);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-add-table:hover {
+            opacity: 0.9;
+        }
+
+        /* Content Container */
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 30px 20px;
+        }
+
+        .tables-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Individual Table Item Card */
+        .table-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            min-height: 90px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .table-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .table-info-wrap {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .table-accent-bar {
+            width: 6px;
+            height: 45px;
+            background-color: rgb(28, 47, 73);
+            border-radius: 4px;
+        }
+
+        .table-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .table-name {
+            color: rgb(24, 24, 24);
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .table-capacity {
+            color: rgb(100, 100, 100);
+            font-size: 14px;
+        }
+
+        .table-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .action-icon {
+            font-size: 26px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.1s, color 0.2s;
+        }
+
+        .action-icon.edit {
+            color: rgb(100, 100, 100);
+        }
+
+        .action-icon.edit:hover {
+            color: #E1B12C;
+            transform: scale(1.15);
+        }
+
+        .action-icon.delete {
+            color: rgb(200, 50, 50);
+        }
+
+        .action-icon.delete:hover {
+            color: #e11d48;
+            transform: scale(1.15);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            color: #cbd5e1;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header Navigation -->
+    <header class="header-bar">
+        <div class="header-left">
+            <a href="Yönetim.html" title="Back to Management">
+                <span class="material-symbols-outlined back-btn">replay</span>
+            </a>
+            <h1 class="header-title">Registered Tables</h1>
+        </div>
+
+        <button class="btn-add-table" id="addTableBtn">
+            <span class="material-symbols-outlined">add</span> Add Table
+        </button>
+    </header>
+
+    <!-- Main Table Container -->
+    <main class="main-container">
+        <div class="tables-grid" id="tablesWrap"></div>
+    </main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const KEY = "menulux_tables_v1";
+    const wrap = document.getElementById("tablesWrap");
+    const addBtn = document.getElementById("addTableBtn");
+
+    const DEFAULT_TABLES = [
+        { id: "1", name: "Table 1", capacity: 4 },
+        { id: "2", name: "Table 2", capacity: 2 },
+        { id: "3", name: "Table 3", capacity: 6 }
+    ];
+
+    function loadTables() {
+        try { return JSON.parse(localStorage.getItem(KEY)) || []; } 
+        catch { return []; }
+    }
+
+    function saveTables(arr) {
+        localStorage.setItem(KEY, JSON.stringify(arr));
+    }
+
+    function ensureDefaults() {
+        const tables = loadTables();
+        if (tables.length) return;
+        saveTables(DEFAULT_TABLES);
+    }
+
+    function esc(s) {
+        return String(s)
+            .replaceAll("&","&amp;")
+            .replaceAll("<","&lt;")
+            .replaceAll(">","&gt;")
+            .replaceAll('"',"&quot;")
+            .replaceAll("'","&#039;");
+    }
+
+    function render() {
+        const tables = loadTables();
+
+        if (!tables.length) {
+            wrap.innerHTML = `
+                <div class="empty-state">
+                    No registered tables found. Click "Add Table" to add one.
+                </div>
+            `;
+            return;
+        }
+
+        wrap.innerHTML = tables.map(t => `
+            <div class="table-card" data-id="${esc(t.id)}">
+                <div class="table-info-wrap">
+                    <div class="table-accent-bar"></div>
+                    <div class="table-details">
+                        <h2 class="table-name">${esc(t.name)}</h2>
+                        <span class="table-capacity">Capacity: ${esc(t.capacity)} guests</span>
+                    </div>
+                </div>
+
+                <div class="table-actions">
+                    <span class="material-symbols-outlined action-icon edit" data-edit="${esc(t.id)}" title="Edit Table">edit</span>
+                    <span class="material-symbols-outlined action-icon delete" data-del="${esc(t.id)}" title="Delete Table">delete</span>
+                </div>
+            </div>
+        `).join("");
+
+        // Delete action handlers
+        wrap.querySelectorAll("[data-del]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const id = btn.getAttribute("data-del");
+                if (!confirm("Are you sure you want to delete this table?")) return;
+
+                let tables = loadTables();
+                tables = tables.filter(x => String(x.id) !== String(id));
+                saveTables(tables);
+
+                // Clear table storage states
+                localStorage.removeItem("masa_" + id);
+                localStorage.removeItem("masa_people_" + id);
+                localStorage.removeItem("masa_res_name_" + id);
+                localStorage.removeItem("masa_res_phone_" + id);
+                localStorage.removeItem("menulux_order_table_" + id + "_v1");
+                localStorage.removeItem("menulux_lock_table_" + id + "_v1");
+
+                render();
+            });
+        });
+
+        // Edit action handlers
+        wrap.querySelectorAll("[data-edit]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const id = btn.getAttribute("data-edit");
+                let tables = loadTables();
+                const t = tables.find(x => String(x.id) === String(id));
+                if (!t) return;
+
+                const newName = prompt("New table name:", t.name);
+                if (newName === null) return;
+                const trimmed = newName.trim();
+                if (!trimmed) return alert("Table name cannot be empty.");
+
+                const newCap = prompt("New capacity:", t.capacity);
+                if (newCap === null) return;
+                const cap = Number(newCap);
+                if (!Number.isFinite(cap) || cap <= 0) return alert("Capacity must be valid.");
+
+                t.name = trimmed;
+                t.capacity = cap;
+                saveTables(tables);
+                render();
+            });
+        });
+    }
+
+    // Add new table logic
+    function addTable() {
+        const nameInput = prompt("Enter table name (e.g., Table 4):");
+        if (nameInput === null) return;
+
+        const name = nameInput.trim();
+        if (!name) return alert("Table name cannot be empty.");
+
+        const capInput = prompt("Enter table capacity (e.g., 4):", "4");
+        if (capInput === null) return;
+
+        const cap = Number(capInput);
+        if (!Number.isFinite(cap) || cap <= 0) return alert("Please enter a valid capacity number.");
+
+        const tables = loadTables();
+        const exists = tables.some(x => (x.name || "").toLowerCase() === name.toLowerCase());
+        if (exists) return alert("A table with this name already exists.");
+
+        const newTable = {
+            id: String(Date.now()),
+            name: name,
+            capacity: cap
+        };
+
+        tables.push(newTable);
+        saveTables(tables);
+        render();
+    }
+
+    addBtn.addEventListener("click", addTable);
+
+    ensureDefaults();
+    render();
+});
+</script>
+
+</body>
+</html>

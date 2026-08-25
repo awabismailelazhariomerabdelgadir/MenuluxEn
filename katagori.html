@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/x-icon" href="img/menulux_logo_circle.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Management - POS</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
+    <style>
+        /* Base Reset & Variables */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f3f4f6;
+            font-family: Arial, sans-serif;
+            color: #181818;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* Top Header Bar */
+        .header-bar {
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+            width: 100%;
+            padding: 0 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            color: #E1B12C;
+            background-color: #ffffff;
+            border: #E1B12C solid 2px;
+            cursor: pointer;
+            border-radius: 50%;
+            height: 40px;
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .back-btn:hover {
+            background-color: #E1B12C;
+            color: #ffffff;
+        }
+
+        .header-title {
+            color: #181818;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-add-cat {
+            background-color: #E1B12C;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-add-cat:hover {
+            opacity: 0.9;
+        }
+
+        /* Main Wrapper */
+        .main-container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        /* Categories List Grid */
+        .cat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Category Card Component */
+        .cat-card {
+            border-left: solid 6px #E1B12C;
+            background-color: #ffffff;
+            min-height: 90px;
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 15px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .cat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .cat-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .cat-icon {
+            font-size: 26px;
+            height: 50px;
+            width: 50px;
+            color: #181818;
+            background-color: #f3f4f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cat-name {
+            color: #181818;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .cat-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .action-btn {
+            font-size: 24px;
+            color: #64748b;
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.2s, transform 0.1s;
+        }
+
+        .action-btn.edit:hover {
+            color: #E1B12C;
+            transform: scale(1.1);
+        }
+
+        .action-btn.delete:hover {
+            color: #e11d48;
+            transform: scale(1.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            background: #ffffff;
+            border-radius: 12px;
+            color: #64748b;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header Navigation -->
+    <header class="header-bar">
+        <div class="header-left">
+            <a href="Yönetim.html" title="Back to Management">
+                <span class="material-symbols-outlined back-btn">replay</span>
+            </a>
+            <h1 class="header-title">Category Management</h1>
+        </div>
+
+        <button class="btn-add-cat" id="addCatBtn">
+            <span class="material-symbols-outlined">add</span> Add Category
+        </button>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-container">
+        <div class="cat-list" id="catList"></div>
+    </main>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const CAT_KEY = "menulux_categories_v1";
+        const listEl = document.getElementById("catList");
+        const addBtn = document.getElementById("addCatBtn");
+
+        const DEFAULT_CATS = [
+            { id: "1", name: "Beverages" },
+            { id: "2", name: "Main Courses" },
+            { id: "3", name: "Desserts" },
+            { id: "4", name: "Salads" },
+            { id: "5", name: "Soups" }
+        ];
+
+        function loadCats() {
+            try { return JSON.parse(localStorage.getItem(CAT_KEY)) || []; }
+            catch { return []; }
+        }
+
+        function saveCats(arr) {
+            localStorage.setItem(CAT_KEY, JSON.stringify(arr));
+        }
+
+        function ensureDefaults() {
+            const cats = loadCats();
+            if (cats.length) return;
+            saveCats(DEFAULT_CATS);
+        }
+
+        function esc(s) {
+            return String(s)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+        function render() {
+            const cats = loadCats();
+
+            if (cats.length === 0) {
+                listEl.innerHTML = `<div class="empty-state">No categories found. Click "Add Category" to create one.</div>`;
+                return;
+            }
+
+            listEl.innerHTML = cats.map(c => `
+                <div class="cat-card" data-id="${esc(c.id)}">
+                    <div class="cat-info">
+                        <span class="material-symbols-outlined cat-icon">tag</span>
+                        <h2 class="cat-name">${esc(c.name)}</h2>
+                    </div>
+
+                    <div class="cat-actions">
+                        <span class="material-symbols-outlined action-btn edit" data-edit="${esc(c.id)}" title="Edit Category">edit</span>
+                        <span class="material-symbols-outlined action-btn delete" data-delete="${esc(c.id)}" title="Delete Category">delete</span>
+                    </div>
+                </div>
+            `).join("");
+
+            // Edit Action Handlers
+            listEl.querySelectorAll("[data-edit]").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const id = btn.getAttribute("data-edit");
+                    editCategory(id);
+                });
+            });
+
+            // Delete Action Handlers
+            listEl.querySelectorAll("[data-delete]").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const id = btn.getAttribute("data-delete");
+                    deleteCategory(id);
+                });
+            });
+        }
+
+        function addCategory() {
+            const nameInput = prompt("Enter new category name:");
+            if (nameInput === null) return;
+
+            const name = nameInput.trim();
+            if (!name) return alert("Category name cannot be empty.");
+
+            const cats = loadCats();
+            const exists = cats.some(x => (x.name || "").toLowerCase() === name.toLowerCase());
+            if (exists) return alert("A category with this name already exists.");
+
+            const newCat = {
+                id: String(Date.now()),
+                name: name
+            };
+
+            cats.push(newCat);
+            saveCats(cats);
+            render();
+        }
+
+        function editCategory(id) {
+            const cats = loadCats();
+            const cat = cats.find(x => String(x.id) === String(id));
+            if (!cat) return;
+
+            const newName = prompt("New category name:", cat.name);
+            if (newName === null) return;
+
+            const name = newName.trim();
+            if (!name) return alert("Category name cannot be empty.");
+
+            const exists = cats.some(x => String(x.id) !== String(cat.id) && (x.name || "").toLowerCase() === name.toLowerCase());
+            if (exists) return alert("This category name already exists.");
+
+            cat.name = name;
+            saveCats(cats);
+            render();
+        }
+
+        function deleteCategory(id) {
+            const cats = loadCats();
+            const cat = cats.find(x => String(x.id) === String(id));
+            if (!cat) return;
+
+            if (!confirm(`Are you sure you want to delete the "${cat.name}" category?`)) return;
+
+            const next = cats.filter(x => String(x.id) !== String(id));
+            saveCats(next);
+            render();
+        }
+
+        addBtn.addEventListener("click", addCategory);
+
+        ensureDefaults();
+        render();
+    });
+    </script>
+
+</body>
+</html>

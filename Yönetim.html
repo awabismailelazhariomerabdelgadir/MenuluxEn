@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to POS - Admin Panel</title>
+    <link rel="icon" type="image/x-icon" href="img/menulux_logo_circle.ico">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: rgb(238, 239, 240);
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1250px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Top Bar Header */
+        .header-bar {
+            background-color: rgb(255, 255, 255);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+            padding: 0 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .header-left a {
+            text-decoration: none;
+        }
+
+        .btn-icon-back {
+            font-size: 20px;
+            color: #E1B12C;
+            background-color: #ffffff;
+            border: #E1B12C solid 2px;
+            cursor: pointer;
+            border-radius: 50%;
+            height: 40px;
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        .btn-icon-back span {
+            text-decoration: overline;
+            color: inherit;
+        }
+
+        .btn-icon-back:hover {
+            background-color: #fff9e6;
+        }
+
+        .title-admin {
+            color: #E1B12C;
+            font-size: 21px;
+            margin: 0;
+        }
+
+        .btn-logout {
+            border-radius: 12px;
+            border: none;
+            height: 38px;
+            width: 110px;
+            background-color: #E1B12C;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-logout:hover {
+            opacity: 0.9;
+        }
+
+        /* Quick Creation Panel */
+        .card-panel {
+            background-color: rgb(255, 255, 255);
+            border-radius: 12px;
+            padding: 20px 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .card-panel h1 {
+            color: rgb(46, 87, 121);
+            font-size: 19px;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .input-field {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: rgb(240, 238, 238);
+            height: 42px;
+            padding: 0 15px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .input-name {
+            flex: 2;
+            min-width: 250px;
+        }
+
+        .input-capacity {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .btn-action-primary {
+            border-radius: 12px;
+            border: none;
+            height: 50px;
+            width: 100%;
+            background-color: #E1B12C;
+            color: rgb(19, 33, 51);
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-action-primary:hover {
+            opacity: 0.9;
+        }
+
+        /* Management List Section */
+        .management-section h1 {
+            color: rgb(34, 61, 110);
+            font-size: 19px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .management-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn-nav-option {
+            border-radius: 12px;
+            border: none;
+            height: 50px;
+            width: 100%;
+            background-color: #E1B12C;
+            color: rgb(19, 33, 51);
+            font-size: 18px;
+            font-weight: bold;
+            text-align: left;
+            padding-left: 20px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-nav-option:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Top Navigation -->
+        <header class="header-bar">
+            <div class="header-left">
+                <a href="dashboard.html" title="Dashboard">
+                    <span class="material-symbols-outlined btn-icon-back">replay</span>
+                </a>
+                <h1 class="title-admin">ADMIN PANEL</h1>
+            </div>
+            <button class="btn-logout" onclick="logout()">Log Out</button>
+        </header>
+
+        <!-- Quick Creation Form -->
+        <section class="card-panel">
+            <h1>Quick Table Creation</h1>
+            <form id="tableForm" onsubmit="event.preventDefault();">
+                <div class="form-row">
+                    <input class="input-field input-name" id="tableName" type="text" placeholder="Table Name (e.g., Table A1)" required>
+                    <input class="input-field input-capacity" id="tableCapacity" type="number" placeholder="Capacity" min="1" required>
+                </div>
+                <button type="button" class="btn-action-primary" id="btnAddTable">+ Add Table</button>
+            </form>
+        </section>
+
+        <!-- General Management Links -->
+        <section class="management-section">
+            <h1>GENERAL MANAGEMENT</h1>
+            <ul class="management-list">
+                <li><button type="button" class="btn-nav-option" onclick="navigateTo('tables.html')">EDIT ALL TABLES</button></li>
+                <li><button type="button" class="btn-nav-option" onclick="navigateTo('personal.html')">STAFF MANAGEMENT</button></li>
+                <li><button type="button" class="btn-nav-option" onclick="navigateTo('katagori.html')">CATEGORY MANAGEMENT</button></li>
+            </ul>
+        </section>
+    </div>
+
+    <script>
+        function logout() {
+            window.location.href = "index.html"; 
+        }
+
+        function navigateTo(url) {
+            window.location.href = url;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const KEY = "menulux_tables_v1";
+
+            function ensureDefaults() {
+                let list = [];
+                try { list = JSON.parse(localStorage.getItem(KEY)) || []; } catch { list = []; }
+                if (list.length) return;
+
+                const defaults = [
+                    { id: "1", name: "Table 1", capacity: 8 },
+                    { id: "2", name: "Table 2", capacity: 4 },
+                    { id: "3", name: "Table 3", capacity: 4 },
+                    { id: "4", name: "Table 4", capacity: 4 },
+                    { id: "5", name: "Table 5", capacity: 5 },
+                    { id: "6", name: "Table 6", capacity: 6 },
+                    { id: "7", name: "Table 7", capacity: 6 },
+                ];
+                localStorage.setItem(KEY, JSON.stringify(defaults));
+            }
+
+            function loadTables() {
+                try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; }
+            }
+
+            function saveTables(arr) {
+                localStorage.setItem(KEY, JSON.stringify(arr));
+            }
+
+            function nextNumericId(tables) {
+                const nums = tables
+                    .map(t => Number(String(t.id).replace(/\D/g, "")))
+                    .filter(n => Number.isFinite(n) && n > 0);
+                const max = nums.length ? Math.max(...nums) : 0;
+                return String(max + 1);
+            }
+
+            ensureDefaults();
+
+            const nameEl = document.getElementById("tableName");
+            const capEl = document.getElementById("tableCapacity");
+            const btn = document.getElementById("btnAddTable");
+
+            btn.addEventListener("click", () => {
+                const rawName = (nameEl.value || "").trim();
+                const capacity = Number(capEl.value);
+
+                if (!rawName) return alert("Table name cannot be empty.");
+                if (!Number.isFinite(capacity) || capacity <= 0) return alert("Capacity must be a positive number.");
+
+                const tables = loadTables();
+
+                const exists = tables.some(t => (t.name || "").toLowerCase() === rawName.toLowerCase());
+                if (exists) return alert("This table name already exists.");
+
+                const id = nextNumericId(tables);
+
+                tables.push({ id, name: rawName, capacity });
+                saveTables(tables);
+
+                nameEl.value = "";
+                capEl.value = "";
+
+                alert("Table added: " + rawName);
+                window.location.href = "tables.html";
+            });
+        });
+    </script>
+</body>
+</html>

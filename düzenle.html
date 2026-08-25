@@ -1,0 +1,353 @@
+<!-- ========================= duzele.html ========================= -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POS Welcome - Edit Product</title>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <style>
+    /* Reset & Base Styles */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: rgb(252, 251, 251);
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Top Navigation Section */
+    .f {
+      background-color: rgb(182, 179, 179);
+    }
+
+    .div0 {
+      height: 70px;
+      background-color: rgb(252, 251, 251);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 15px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      display: inline-flex;
+    }
+
+    .item19 {
+      font-size: 23px;
+      color: #E1B12C;
+      background-color: rgb(252, 251, 251);
+      border: #E1B12C solid 2px;
+      cursor: pointer;
+      border-radius: 50%;
+      height: 38px;
+      width: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .item19:hover {
+      background-color: #E1B12C;
+      color: #ffffff;
+    }
+
+    .item20 {
+      color: rgb(30, 52, 80);
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .div1 {
+      padding: 12px 20px;
+      border-bottom: silver 1px solid;
+      border-top: silver 1px solid;
+      background-color: rgb(252, 251, 251);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .item1 {
+      color: rgb(133, 132, 129);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .div1 h1 {
+      color: rgb(248, 143, 45);
+      font-size: 20px;
+    }
+
+    /* Page Main Container */
+    .main-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 20px 15px;
+    }
+
+    /* Category Buttons Scroll Container */
+    .div2 {
+      width: 100%;
+      background-color: rgb(223, 221, 221);
+      border-radius: 12px;
+      padding: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .div2-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      list-style: none;
+      width: 100%;
+    }
+
+    .item3 {
+      border: none;
+      background-color: rgb(247, 246, 246);
+      color: rgb(62, 62, 71);
+      height: 48px;
+      padding: 0 20px;
+      min-width: 130px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    .item3:hover, .item3:focus, .item3.active {
+      background-color: rgb(241, 173, 62);
+      color: #ffffff;
+      outline: none;
+    }
+
+    /* Products Grid Container */
+    .div3 {
+      background-color: rgb(252, 251, 251);
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 20px;
+      list-style: none;
+    }
+
+    .item4 {
+      background-color: rgb(245, 243, 243);
+      color: rgb(30, 52, 80);
+      height: 165px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .item4:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    .card-details {
+      padding: 8px 10px 12px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .item4 h1 {
+      font-size: 15px;
+      line-height: 1.2;
+      color: rgb(30, 52, 80);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .item4 p {
+      font-size: 15px;
+      font-weight: bold;
+      color: #cea837;
+    }
+
+    /* Image Inside Product Card */
+    .prodImg {
+      width: 100%;
+      height: 90px;
+      object-fit: contain;
+      background: #ffffff;
+      display: block;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .empty-msg {
+      grid-column: 1 / -1;
+      color: rgb(133, 132, 129);
+      font-size: 15px;
+      padding: 10px 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="f">
+    <div class="div0">
+      <a href="mutfak.html" class="back-btn">
+        <span class="material-symbols-outlined item19">replay</span>
+      </a>
+      <h1 class="item20">MENU</h1>
+    </div>
+
+    <div class="div1">
+      <p class="item1">SELECT PRODUCT TO EDIT</p>
+      <h1>EDIT PRODUCT</h1>
+    </div>
+  </div>
+
+  <main class="main-container">
+    <!-- Categories List -->
+    <div class="div2">
+      <ul class="div2-list" id="categoryButtons"></ul>
+    </div>
+
+    <!-- Products List -->
+    <ul class="div3" id="productsList"></ul>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const STORAGE_KEY = "menulux_products_v1";
+      const CAT_KEY = "menulux_categories_v1";
+      const catContainer = document.getElementById("categoryButtons");
+      const listEl = document.getElementById("productsList");
+
+      function loadCategories() {
+        try { return JSON.parse(localStorage.getItem(CAT_KEY)) || []; }
+        catch { return []; }
+      }
+
+      function renderCategories() {
+        const cats = loadCategories();
+
+        catContainer.innerHTML = cats.map(c => `
+          <li>
+            <input class="item3" type="button" value="${escapeHtml(c.name)}">
+          </li>
+        `).join("");
+
+        const buttons = catContainer.querySelectorAll("input.item3");
+
+        buttons.forEach(btn => {
+          btn.addEventListener("click", () => {
+            buttons.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            renderCategory(btn.value);
+          });
+        });
+
+        if (cats.length && buttons.length > 0) {
+          buttons[0].classList.add("active");
+          renderCategory(cats[0].name);
+        }
+      }
+
+      function normTR(s) {
+        return (s || "")
+          .toLowerCase()
+          .replaceAll("ı", "i")
+          .replaceAll("İ", "i")
+          .replaceAll("ç", "c")
+          .replaceAll("ş", "s")
+          .replaceAll("ğ", "g")
+          .replaceAll("ö", "o")
+          .replaceAll("ü", "u")
+          .trim();
+      }
+
+      function loadProducts() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+        catch { return []; }
+      }
+
+      function formatTL(n) {
+        const num = Number(n);
+        return "₺" + (Number.isFinite(num) ? num.toFixed(2) : "0.00");
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      const PLACEHOLDER_IMG =
+        'data:image/svg+xml;utf8,' +
+        encodeURIComponent(`
+          <svg xmlns="http://www.w3.org/2000/svg" width="400" height="240">
+            <rect width="100%" height="100%" fill="#ffffff"/>
+            <rect x="10" y="10" width="380" height="220" rx="18" ry="18" fill="#f5f3f3" stroke="#d9d9d9"/>
+            <text x="200" y="130" text-anchor="middle" font-size="28" fill="#1e3450" font-family="Arial">No Image</text>
+          </svg>
+        `);
+
+      function renderCategory(catText) {
+        const products = loadProducts();
+        const filtered = products.filter(p => normTR(p.category) === normTR(catText));
+
+        if (filtered.length === 0) {
+          listEl.innerHTML = `<p class="empty-msg">No products in this category.</p>`;
+          return;
+        }
+
+        listEl.innerHTML = filtered.map(p => {
+          const imgSrc = (p.image && String(p.image).startsWith("data:image/")) ? p.image : PLACEHOLDER_IMG;
+
+          return `
+            <li class="item4" data-id="${escapeHtml(p.id)}">
+              <img class="prodImg" src="${imgSrc}" alt="${escapeHtml(p.name)}">
+              <div class="card-details">
+                <h1>${escapeHtml(p.name)}</h1>
+                <p>${formatTL(p.price)}</p>
+              </div>
+            </li>
+          `;
+        }).join("");
+
+        listEl.querySelectorAll("li.item4").forEach(card => {
+          card.addEventListener("click", () => {
+            const id = card.getAttribute("data-id");
+            window.location.href = "edit.html?id=" + encodeURIComponent(id);
+          });
+        });
+      }
+
+      renderCategories();
+    });
+  </script>
+
+</body>
+</html>

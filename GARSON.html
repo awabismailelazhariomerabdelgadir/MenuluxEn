@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS - Waiter Screen</title>
+    <link rel="icon" type="image/x-icon" href="img/menulux_logo_circle.ico">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <style>
+        /* Base Reset & Core Styles */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-body: #eeeff0;
+            --surface: #ffffff;
+            --primary-gold: #e1b12c;
+            --primary-navy: #243d5f;
+            --text-dark: #1e293b;
+            --text-muted: rgba(93, 93, 94, 0.85);
+            --border-color: #e2e8f0;
+
+            --state-empty: rgb(100, 180, 69);
+            --state-reserved: rgb(242, 193, 26);
+            --state-full: rgb(238, 26, 26);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Responsive Top Header Navigation */
+        .div0 {  
+            position: sticky;
+            top: 0;
+            background-color: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+            width: 100%;
+            padding: 0 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-left a {
+            text-decoration: none;
+            display: inline-flex;
+        }
+
+        .item19 {
+            font-size: 20px;
+            color: var(--primary-gold);
+            background-color: var(--surface);
+            border: var(--primary-gold) solid 2px;
+            cursor: pointer;
+            border-radius: 50%;
+            height: 40px;
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .item19:hover {
+            background-color: var(--primary-gold);
+            color: var(--surface);
+        }
+
+        .item20 {
+            color: var(--primary-gold);
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .item21 {
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        .item22 {
+            border-radius: 10px;
+            border: none;
+            height: 38px;
+            padding: 0 18px;
+            background-color: #d62727;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            flex-shrink: 0;
+        }
+
+        .item22:hover {
+            background-color: #b91c1c;
+        }
+
+        .item22:active {
+            transform: scale(0.97);
+        }
+
+        /* Main Screen Layout Container */
+        .main-container {
+            width: 100%;
+            max-width: 1280px;
+            padding: 24px 16px 40px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Status Metrics Bar */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            width: 100%;
+        }
+
+        .div1, .div2, .div3 { 
+            background-color: var(--surface);
+            height: 120px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            gap: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        }
+
+        .item1, .item100, .item200 {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .item1 { background-color: var(--state-empty); }
+        .item100 { background-color: var(--state-full); }
+        .item200 { background-color: var(--state-reserved); }
+
+        .item2 {
+            font-size: 28px;
+            color: #d6af42;
+            line-height: 1;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .item3, .item4, .item5 {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        /* Tables Container Section Header */
+        .div4 {
+            width: 100%;
+            height: 60px;
+            background-color: var(--surface);
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .thing0 {
+            font-size: 24px;
+            color: #d6af42;
+        }
+
+        .thing1 {
+            font-size: 18px;
+            color: #d6af42;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .thing2 {
+            font-size: 15px;
+            color: rgb(133, 133, 133);
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* Dynamic Table Grid View */
+        .div5 {
+            width: 100%;
+            background-color: var(--surface);
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            min-height: 300px;
+        }
+
+        /* Individual Table Card Structure */
+        .tableCard {
+            position: relative;
+            background-color: var(--surface);
+            width: 100%;
+            min-height: 130px;
+            border-radius: 11px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            border: 1px solid var(--border-color);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .tableCard:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
+
+        .tableIcon {
+            font-size: 38px;
+            color: #dfbf68;
+            line-height: 1;
+        }
+
+        .tableTitle {
+            font-size: 19px;
+            color: var(--primary-navy);
+            margin: 0;
+            line-height: 1.2;
+            font-weight: bold;
+            padding-right: 95px; /* Leave space for button */
+        }
+
+        .tableInfo {
+            font-size: 12px;
+            color: rgb(133, 132, 132);
+            margin-top: 6px;
+            font-weight: normal;
+        }
+
+        /* Action/State Button */
+        .stateBtn {
+            position: absolute;
+            right: 16px;
+            top: 18px;
+            border-radius: 6px;
+            border: none;
+            height: 32px;
+            width: 90px;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            transition: opacity 0.2s ease, transform 0.1s ease;
+        }
+
+        .stateBtn:hover {
+            opacity: 0.9;
+        }
+
+        .stateBtn:active {
+            transform: scale(0.96);
+        }
+
+        /* Colors by State */
+        .state-empty {
+            background-color: var(--state-empty);
+            color: white;
+        }
+        .state-reserved {
+            background-color: var(--state-reserved);
+            color: var(--primary-navy);
+        }
+        .state-full {
+            background-color: var(--state-full);
+            color: white;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .div0 {
+                padding: 0 16px;
+            }
+
+            .item20 {
+                font-size: 17px;
+            }
+
+            .item21 {
+                font-size: 12px;
+            }
+
+            .item22 {
+                padding: 0 12px;
+                font-size: 13px;
+            }
+
+            .main-container {
+                padding: 16px 12px 30px 12px;
+            }
+
+            .div5 {
+                grid-template-columns: 1fr;
+                padding: 16px;
+            }
+
+            .tableCard {
+                max-width: 100%;
+            }
+        }
+    </style>
+
+    <script>
+    // File name of your table actions page
+    const ACTION_PAGE = "table_actions.html"; // Change to "masaislemleri.html" if using that filename
+    const TABLES_KEY = "menulux_tables_v1";
+
+    function logout() {
+        window.location.href = "index.html";
+    }
+
+    function loadTables() {
+        try { 
+            return JSON.parse(localStorage.getItem(TABLES_KEY)) || []; 
+        } catch { 
+            return []; 
+        }
+    }
+
+    function esc(s) {
+        return String(s)
+            .replaceAll("&","&amp;")
+            .replaceAll("<","&lt;")
+            .replaceAll(">","&gt;")
+            .replaceAll('"',"&quot;")
+            .replaceAll("'","&#039;");
+    }
+
+    function openTableActions(id) {
+        // Read current state using "masa_" key
+        const current = localStorage.getItem("masa_" + id) || "empty";
+
+        localStorage.setItem("pendingMasa", id);
+        localStorage.setItem("pendingState", current);
+        window.location.href = "masaislamri.html"; 
+    }
+
+    function buildCards() {
+        const wrap = document.getElementById("garsonTables");
+        const tables = loadTables();
+
+        if (!tables.length) {
+            wrap.innerHTML = "<p style='padding:20px; color:#888; grid-column: 1 / -1; text-align: center;'>No tables found. Add tables from the manager dashboard.</p>";
+            return;
+        }
+
+        wrap.innerHTML = tables.map(t => {
+            const tableName = esc(t.name).replace(/Masa/gi, "Table");
+            return `
+            <div class="tableCard" data-id="${esc(t.id)}">
+                <div style="display: flex; gap: 12px;">
+                    <span class="material-symbols-outlined tableIcon">flag_2</span>
+                    <div>
+                        <h1 class="tableTitle">${tableName}</h1>
+                        <p class="tableInfo" id="info-${esc(t.id)}"></p>
+                    </div>
+                </div>
+                <input type="button" id="btn-${esc(t.id)}" class="stateBtn state-empty" value="Empty"
+                    onclick="openTableActions('${esc(t.id)}')">
+            </div>
+            `;
+        }).join("");
+
+        // Update total count
+        const totalEl = document.querySelector(".thing2");
+        if (totalEl) totalEl.textContent = "Total: " + tables.length;
+    }
+
+    function renderTables() {
+        buildCards();
+
+        let empty = 0, full = 0, reserved = 0;
+
+        document.querySelectorAll(".tableCard").forEach(card => {
+            const id = card.dataset.id;
+            // FIXED: Using "masa_" key to stay consistent with table_actions.html
+            const state = localStorage.getItem("masa_" + id) || "empty";
+
+            const btn = document.getElementById("btn-" + id);
+            const infoEl = document.getElementById("info-" + id);
+
+            const people = localStorage.getItem("masa_people_" + id);
+            const resName = localStorage.getItem("masa_res_name_" + id);
+            const resPhone = localStorage.getItem("masa_res_phone_" + id);
+
+            if (!btn) return;
+
+            btn.className = "stateBtn";
+
+            if (state === "empty") {
+                btn.value = "Empty";
+                btn.classList.add("state-empty");
+                empty++;
+                if (infoEl) infoEl.textContent = "";
+            } else if (state === "full") {
+                btn.value = "Occupied";
+                btn.classList.add("state-full");
+                full++;
+                if (infoEl) infoEl.textContent = people ? (people + " guests") : "";
+            } else if (state === "reserved") {
+                btn.value = "Reserved";
+                btn.classList.add("state-reserved");
+                reserved++;
+
+                const parts = [];
+                if (people) parts.push(people + " guests");
+                if (resName) parts.push(resName);
+                if (resPhone) parts.push(resPhone);
+
+                if (infoEl) infoEl.textContent = parts.join(" • ");
+            }
+        });
+
+        document.getElementById("count-empty").textContent = empty;
+        document.getElementById("count-full").textContent = full;
+        document.getElementById("count-reserved").textContent = reserved;
+    }
+
+    window.onload = renderTables;
+    </script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="div0">
+        <div class="header-left">
+            <a href="dashboard.html">
+                <span class="material-symbols-outlined item19">replay</span>
+            </a>
+            <div>
+                <h1 class="item20">Waiter Screen</h1>
+                <p class="item21">Welcome, Ayşe Yılmaz!</p>
+            </div>
+        </div>
+        <input class="item22" type="button" value="Log Out" onclick="logout()">
+    </header>
+
+    <!-- Main Content Wrapper -->
+    <main class="main-container">
+        <!-- Status Counters Section -->
+        <section class="stats-grid">
+            <div class="div1">
+                <div class="item1"></div>
+                <h1 class="item2">
+                    <span id="count-empty">0</span>
+                    <p class="item3">Empty</p>
+                </h1>
+            </div>
+
+            <div class="div2">
+                <div class="item100"></div>
+                <h1 class="item2">
+                    <span id="count-full">0</span>
+                    <p class="item4">Occupied</p>
+                </h1>
+            </div>
+
+            <div class="div3">
+                <div class="item200"></div>
+                <h1 class="item2">
+                    <span id="count-reserved">0</span>
+                    <p class="item5">Reserved</p>
+                </h1>
+            </div>
+        </section>
+
+        <!-- Tables View Section -->
+        <section>
+            <div class="div4">
+                <div class="section-title">
+                    <span class="material-symbols-outlined thing0">flag_2</span>
+                    <h1 class="thing1">TABLE LIST</h1>
+                </div>
+                <h4 class="thing2">Total: 0</h4>
+            </div>
+
+            <div class="div5" id="garsonTables"></div>
+        </section>
+    </main>
+</body>
+</html>

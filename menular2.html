@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS Menu Display</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <style>
+        /* Base Reset & Variables */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-color: #f8fafc;
+            --primary-navy: #1e3450;
+            --accent-gold: #e1b12c;
+            --accent-gold-hover: #c99c22;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: Arial, sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header Area */
+        .header-bar {
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            line-height: 1;
+        }
+
+        /* Horizontal Scrollable Category Navigation */
+        .category-nav-wrapper {
+            background-color: #e2e8f0;
+            padding: 12px 24px;
+        }
+
+        .category-list {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            list-style: none;
+            scrollbar-width: thin;
+            padding-bottom: 4px;
+        }
+
+        .category-list::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .category-list::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .category-btn {
+            background-color: #ffffff;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .category-btn:hover {
+            background-color: var(--accent-gold);
+            color: var(--primary-navy);
+        }
+
+        .category-btn.active {
+            background-color: var(--accent-gold);
+            color: var(--primary-navy);
+            border-color: var(--accent-gold);
+            box-shadow: 0 4px 8px rgba(225, 177, 44, 0.3);
+        }
+
+        /* Main Product Grid Area */
+        .products-container {
+            padding: 24px;
+            flex: 1;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 16px;
+            list-style: none;
+        }
+
+        .product-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .prod-img-wrap {
+            width: 100%;
+            height: 100px;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .prod-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .product-info {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            justify-content: space-between;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-navy);
+            line-height: 1.2;
+        }
+
+        .product-price {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--accent-gold-hover);
+        }
+
+        .empty-message {
+            color: var(--text-muted);
+            font-size: 15px;
+            grid-column: 1 / -1;
+            padding: 40px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header Section -->
+    <header class="header-bar">
+        <span class="header-subtitle">SELECT A PRODUCT FOR DETAILS</span>
+        <h1 class="header-title">MENU</h1>
+    </header>
+
+    <!-- Categories Navigation Bar -->
+    <nav class="category-nav-wrapper">
+        <ul class="category-list" id="categoryButtons"></ul>
+    </nav>
+
+    <!-- Main Products Display Container -->
+    <main class="products-container">
+        <ul class="product-grid" id="productsList"></ul>
+    </main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const STORAGE_KEY = "menulux_products_v1";
+    const CAT_KEY = "menulux_categories_v1";
+
+    const listEl = document.getElementById("productsList");
+    const catContainer = document.getElementById("categoryButtons");
+
+    let currentCategory = "";
+
+    const PLACEHOLDER_IMG =
+        'data:image/svg+xml;utf8,' +
+        encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" width="400" height="240">
+                <rect width="100%" height="100%" fill="#ffffff"/>
+                <rect x="10" y="10" width="380" height="220" rx="18" ry="18" fill="#f5f3f3" stroke="#d9d9d9"/>
+                <text x="200" y="130" text-anchor="middle" font-size="28" fill="#1e3450" font-family="Arial">No Image</text>
+            </svg>
+        `);
+
+    function loadCategories() {
+        try { return JSON.parse(localStorage.getItem(CAT_KEY)) || []; }
+        catch { return []; }
+    }
+
+    function loadProducts() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+        catch { return []; }
+    }
+
+    function normTR(s) {
+        return (s || "")
+            .toLowerCase()
+            .replaceAll("ı", "i")
+            .replaceAll("İ", "i")
+            .replaceAll("ç", "c")
+            .replaceAll("ş", "s")
+            .replaceAll("ğ", "g")
+            .replaceAll("ö", "o")
+            .replaceAll("ü", "u")
+            .trim();
+    }
+
+    function formatTL(n) {
+        const num = Number(n);
+        return "₺" + (Number.isFinite(num) ? num.toFixed(2) : "0.00");
+    }
+
+    function escapeHtml(str) {
+        return String(str)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+    function renderCategories() {
+        const cats = loadCategories();
+
+        if (!cats.length) {
+            catContainer.innerHTML = `<li class="empty-message">No categories found</li>`;
+            return;
+        }
+
+        catContainer.innerHTML = cats.map((c, idx) => `
+            <li>
+                <button type="button" class="category-btn ${idx === 0 ? 'active' : ''}" data-cat="${escapeHtml(c.name)}">
+                    ${escapeHtml(c.name)}
+                </button>
+            </li>
+        `).join("");
+
+        const btns = catContainer.querySelectorAll(".category-btn");
+
+        btns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                btns.forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                currentCategory = btn.getAttribute("data-cat");
+                renderCategory(currentCategory);
+            });
+        });
+
+        if (cats.length) {
+            currentCategory = cats[0].name;
+            renderCategory(currentCategory);
+        }
+    }
+
+    function renderCategory(catText) {
+        const products = loadProducts();
+        const filtered = products.filter(p => normTR(p.category) === normTR(catText));
+
+        if (filtered.length === 0) {
+            listEl.innerHTML = `<li class="empty-message">No products in this category.</li>`;
+            return;
+        }
+
+        listEl.innerHTML = filtered.map(p => {
+            const imgSrc = (p.image && String(p.image).startsWith("data:image/")) ? p.image : PLACEHOLDER_IMG;
+
+            return `
+                <li class="product-card" data-id="${escapeHtml(p.id)}">
+                    <div class="prod-img-wrap">
+                        <img class="prod-img" src="${imgSrc}" alt="${escapeHtml(p.name)}">
+                    </div>
+                    <div class="product-info">
+                        <span class="product-name">${escapeHtml(p.name)}</span>
+                        <span class="product-price">${formatTL(p.price)}</span>
+                    </div>
+                </li>
+            `;
+        }).join("");
+
+        // Pass selection to parent order iframe/view
+        listEl.querySelectorAll(".product-card").forEach(card => {
+            card.addEventListener("click", () => {
+                const id = card.getAttribute("data-id");
+                window.parent.postMessage(
+                    { type: "ADD_TO_ORDER", productId: id },
+                    "*"
+                );
+            });
+        });
+    }
+
+    renderCategories();
+});
+</script>
+
+</body>
+</html>

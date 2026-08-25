@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS Welcome - Cashier</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
+    <style>
+        /* Base Reset & Setup */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f8fafc;
+            font-family: Arial, sans-serif;
+            color: rgb(30, 52, 80);
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* Header Navigation */
+        .header-bar {
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            color: #E1B12C;
+            background-color: #ffffff;
+            border: #E1B12C solid 2px;
+            cursor: pointer;
+            border-radius: 50%;
+            height: 38px;
+            width: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .back-btn:hover {
+            background-color: #E1B12C;
+            color: #ffffff;
+        }
+
+        .header-title h1 {
+            color: rgb(30, 52, 80);
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .header-title p {
+            color: rgba(133, 132, 129, 0.85);
+            font-size: 13px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            height: 38px;
+            padding: 0 16px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            color: white;
+            transition: opacity 0.2s;
+        }
+
+        .btn-action:hover {
+            opacity: 0.9;
+        }
+
+        .btn-history { background-color: rgb(60, 143, 57); }
+        .btn-new-day { background-color: rgb(30, 52, 80); }
+        .btn-logout  { background-color: #E1B12C; }
+
+        /* Container Layout Wrapper */
+        .main-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Cash Banner Component */
+        .cash-banner {
+            width: 100%;
+            padding: 24px 20px;
+            text-align: center;
+            border-radius: 12px;
+            background-color: rgb(60, 143, 57);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .cash-banner .p1 {
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            color: rgb(210, 235, 214);
+            margin-bottom: 6px;
+        }
+
+        .cash-banner h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .cash-banner .p2 {
+            font-size: 15px;
+            font-weight: bold;
+            color: rgb(210, 235, 214);
+        }
+
+        /* Section Title Header */
+        .section-header {
+            margin-top: 5px;
+        }
+
+        .section-header h2 {
+            font-size: 18px;
+            color: rgb(30, 52, 80);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Orders Queue List */
+        .orders-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Individual Order Card Structure */
+        .order-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .order-card-header {
+            background-color: #f1f5f9;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .order-card-header h2, 
+        .order-card-header h3 {
+            font-size: 16px;
+            color: rgb(30, 52, 80);
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .order-card-body {
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .item4 {
+            font-size: 15px;
+            color: #475569;
+            margin: 3px 0;
+        }
+
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            border-top: 1px solid #f1f5f9;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .item6 {
+            font-size: 20px;
+            color: #f26b1d;
+            font-weight: bold;
+        }
+
+        .order-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+        }
+
+        .btn-order-cancel {
+            height: 36px;
+            width: 100px;
+            border-radius: 8px;
+            background-color: rgb(235, 59, 89);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-order-pay {
+            height: 36px;
+            width: 100px;
+            border-radius: 8px;
+            background-color: #4caf50;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-order-cancel:hover, 
+        .btn-order-pay:hover {
+            opacity: 0.9;
+        }
+
+        .empty-orders {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px dashed #cbd5e1;
+            text-align: center;
+            color: #64748b;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Header Navigation -->
+    <header class="header-bar">
+        <div class="header-left">
+            <a href="dashboard.html" title="Dashboard">
+                <span class="material-symbols-outlined back-btn">replay</span>
+            </a>
+            <div class="header-title">
+                <h1>MENULUX POS - CASHIER</h1>
+                <p>Welcome, Ayşe Yılmaz</p>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <input class="btn-action btn-history" type="button" value="Transaction History" onclick="window.location.href='history.html'">
+            <input class="btn-action btn-new-day" type="button" value="New Day" onclick="handleNewDay()">
+            <input class="btn-action btn-logout" type="button" value="Log Out" onclick="logout()">
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-wrapper">
+        
+        <!-- Cash Daily Summary Banner -->
+        <section class="cash-banner">
+            <p class="p1">DAILY CASH TOTAL</p>
+            <h1 id="dailyTotal">₺ 0.00</h1>
+            <p class="p2">Completed transactions today: <span id="todayTotal">0</span></p>
+        </section>
+
+        <!-- Orders Pending Section -->
+        <section class="section-header">
+            <h2>🔔 ORDERS PENDING PAYMENT</h2>
+        </section>
+
+        <!-- Cash Queue List -->
+        <div class="orders-container" id="cashOrders"></div>
+
+    </main>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const CASH_QUEUE_KEY = "menulux_cash_queue_v1";
+        const CASH_DONE_TOTAL = "menulux_cash_done_total";
+        const CASH_HISTORY_KEY = "menulux_cash_history_v1";
+
+        const wrap = document.getElementById("cashOrders");
+        const dailyTotalEl = document.getElementById("dailyTotal");
+        const todayTotalEl = document.getElementById("todayTotal");
+
+        function loadQueue() {
+            try { return JSON.parse(localStorage.getItem(CASH_QUEUE_KEY)) || []; } 
+            catch { return []; }
+        }
+
+        function saveQueue(arr) {
+            localStorage.setItem(CASH_QUEUE_KEY, JSON.stringify(arr));
+        }
+
+        function loadHistory() {
+            try { return JSON.parse(localStorage.getItem(CASH_HISTORY_KEY)) || []; } 
+            catch { return []; }
+        }
+
+        function saveHistory(arr) {
+            localStorage.setItem(CASH_HISTORY_KEY, JSON.stringify(arr));
+        }
+
+        function loadDoneTotal() {
+            return Number(localStorage.getItem(CASH_DONE_TOTAL)) || 0;
+        }
+
+        function saveDoneTotal(v) {
+            localStorage.setItem(CASH_DONE_TOTAL, v);
+        }
+
+        function formatTL(n) {
+            const num = Number(n);
+            return (Number.isFinite(num) ? num.toFixed(2) : "0.00") + " TL";
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;");
+        }
+
+        function formatOrderId(id) {
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const num = Number(id) || 0;
+            const letter = letters[num % 26];
+            const number = String((num % 99) + 1).padStart(2, "0");
+            return letter + number;
+        }
+
+        function render() {
+            const q = loadQueue();
+
+            let total = 0;
+            q.forEach(o => { total += Number(o.total) || 0; });
+
+            if (dailyTotalEl) {
+                dailyTotalEl.textContent = "₺ " + total.toFixed(2);
+            }
+
+            if (todayTotalEl) {
+                todayTotalEl.textContent = formatTL(loadDoneTotal());
+            }
+
+            if (q.length === 0) {
+                wrap.innerHTML = `
+                    <div class="empty-orders">
+                        No orders pending payment.
+                    </div>
+                `;
+                return;
+            }
+
+            wrap.innerHTML = q.map((o) => {
+                const itemsHtml = o.items.map(it =>
+                    `<p class="item4">${it.qty}x ${escapeHtml(it.name)}</p>`
+                ).join("");
+
+                return `
+                    <div class="order-card">
+                        <div class="order-card-header">
+                            <h2>Table ${escapeHtml(o.masaId)}</h2>
+                            <h3>Order #${formatOrderId(o.id)}</h3>
+                        </div>
+
+                        <div class="order-card-body">
+                            <div class="orderItems">
+                                ${itemsHtml}
+                            </div>
+
+                            <div class="order-footer">
+                                <h4 class="item6">${formatTL(o.total)}</h4>
+
+                                <div class="order-actions">
+                                    <input type="button" class="btn-order-cancel" value="Cancel" data-cancel="${o.id}">
+                                    <input type="button" class="btn-order-pay" value="Pay" data-paid="${o.id}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+
+            /* Attach payment action handlers */
+            wrap.querySelectorAll("[data-paid]").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const id = btn.getAttribute("data-paid");
+                    let queue = loadQueue();
+                    const order = queue.find(x => String(x.id) === String(id));
+
+                    if (!order) return;
+
+                    queue = queue.filter(x => String(x.id) !== String(id));
+                    saveQueue(queue);
+
+                    let done = loadDoneTotal();
+                    done += Number(order.total) || 0;
+                    saveDoneTotal(done);
+
+                    let history = loadHistory();
+                    history.unshift({
+                        id: order.id,
+                        masaId: order.masaId,
+                        total: order.total,
+                        items: order.items,
+                        date: new Date().toISOString().slice(0, 10)
+                    });
+                    saveHistory(history);
+
+                    render();
+                    alert("Payment received.");
+                });
+            });
+
+            /* Attach cancellation action handlers */
+            wrap.querySelectorAll("[data-cancel]").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const id = btn.getAttribute("data-cancel");
+                    if (!confirm("Are you sure you want to cancel this order?")) return;
+
+                    let queue = loadQueue();
+                    queue = queue.filter(x => String(x.id) !== String(id));
+
+                    saveQueue(queue);
+                    render();
+                    alert("Order canceled.");
+                });
+            });
+        }
+
+        render();
+    });
+
+    function handleNewDay() {
+        if (confirm('Are you sure you want to start a new day? This action cannot be undone.')) {
+            localStorage.removeItem('menulux_cash_queue_v1');
+            localStorage.removeItem('menulux_cash_done_total');
+            location.reload();
+        }
+    }
+
+    function logout() {
+        window.location.href = "index.html";
+    }
+    </script>
+
+</body>
+</html>
